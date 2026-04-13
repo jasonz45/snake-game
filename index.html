@@ -4,9 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Snake Game</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap');
 
     :root {
       --bg-from: #2d6a4f;
@@ -291,7 +292,7 @@
         <h2>🌿 Ready?</h2>
         <p>Arrow keys or WASD to move</p>
         <div class="fruit-legend">
-          <span>🍎 ×1</span><span>🍒 ×2</span><span>🍓 ×2</span><span>🍌 ×1</span><span>🍇 ×3</span>
+          <span>🍎 ×1</span><span>🍌 ×1</span><span>🍒 ×2</span><span>🍓 ×2</span><span>🍇 ×3</span><span>🍉 ×3</span>
         </div>
         <button class="btn" id="startBtn">Start Game</button>
       </div>
@@ -500,11 +501,12 @@
       snake.unshift(head);
 
       if (head.x === food.x && head.y === food.y) {
-        score += food.points;
+        const earned = food.points; // capture before placeFood() replaces food
+        score += earned;
         scoreDisplay.textContent = score;
         placeFood();
-        // Add obstacle every 3 fruits (score milestones), starting at score 3
-        if (score >= 3 && score % 3 < food.points) addObstacle();
+        // Add obstacle each time score crosses a multiple of 3, starting at 3
+        if (score >= 3 && Math.floor(score / 3) > Math.floor((score - earned) / 3)) addObstacle();
       } else {
         snake.pop();
       }
@@ -535,7 +537,8 @@
 
       // Snake — interpolated positions
       snake.forEach((seg, i) => {
-        const prev = prevSnake[i] || seg;
+        // For a newly grown segment, start it at the previous tail position
+        const prev = prevSnake[i] || prevSnake[prevSnake.length - 1] || seg;
         const rx = prev.x + (seg.x - prev.x) * interp;
         const ry = prev.y + (seg.y - prev.y) * interp;
         const t = i / Math.max(snake.length - 1, 1);
