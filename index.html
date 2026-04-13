@@ -815,7 +815,7 @@
     replayBtn.addEventListener('click', startGame);
     viewScoresBtn.addEventListener('click', () => {
       gameOverlay.classList.add('hidden');
-      // Highlight the scores panel (scrollIntoView is unreliable with overflow)
+      startOverlay.classList.remove('hidden');
       scoresPanel.classList.add('highlight');
       scoresPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       setTimeout(() => scoresPanel.classList.remove('highlight'), 1800);
